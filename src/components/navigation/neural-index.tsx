@@ -11,17 +11,17 @@ const nodes = [
 ] as const;
 
 const connections = [
-  ["profile", "expertise"],
-  ["profile", "experience"],
-  ["profile", "projects"],
-  ["experience", "credentials"],
-  ["experience", "achievements"],
-  ["expertise", "credentials"],
-  ["expertise", "achievements"],
-  ["projects", "credentials"],
-  ["projects", "achievements"],
-  ["credentials", "contact"],
-  ["achievements", "contact"],
+  ["profile", "expertise", "+0.78"],
+  ["profile", "experience", "+0.91"],
+  ["profile", "projects", "+0.64"],
+  ["experience", "credentials", "+0.83"],
+  ["experience", "achievements", "+0.69"],
+  ["expertise", "credentials", "+0.57"],
+  ["expertise", "achievements", "+0.74"],
+  ["projects", "credentials", "+0.62"],
+  ["projects", "achievements", "+0.88"],
+  ["credentials", "contact", "+0.76"],
+  ["achievements", "contact", "+0.86"],
 ] as const;
 
 export function NeuralIndex({ locale }: { locale: Locale }) {
@@ -29,9 +29,9 @@ export function NeuralIndex({ locale }: { locale: Locale }) {
     locale === "es"
       ? {
           description: "¿Quieres saber más sobre mí? Selecciona un nodo para ir a su sección.",
-          input: "Entrada",
-          hidden: "Capas de conocimiento",
-          output: "Salida",
+          input: "Capa de entrada",
+          hidden: "Capas ocultas",
+          output: "Capa de salida",
           profile: "Perfil",
           experience: "Experiencia",
           expertise: "Tecnologías",
@@ -42,9 +42,9 @@ export function NeuralIndex({ locale }: { locale: Locale }) {
         }
       : {
           description: "Want to know more about me? Select a node to jump to its section.",
-          input: "Input",
-          hidden: "Knowledge layers",
-          output: "Output",
+          input: "Input layer",
+          hidden: "Hidden layers",
+          output: "Output layer",
           profile: "Profile",
           experience: "Experience",
           expertise: "Technologies",
@@ -61,30 +61,52 @@ export function NeuralIndex({ locale }: { locale: Locale }) {
       <div className="neural-index__viewport">
         <svg aria-label={labels.description} role="navigation" viewBox="0 0 1000 500">
           <g aria-hidden="true" className="neural-index__connections">
-            {connections.map(([sourceId, targetId]) => {
+            {connections.map(([sourceId, targetId, weight]) => {
               const source = nodeById.get(sourceId);
               const target = nodeById.get(targetId);
               if (!source || !target) return null;
               return (
-                <line
-                  key={`${sourceId}-${targetId}`}
-                  x1={source.x}
-                  x2={target.x}
-                  y1={source.y}
-                  y2={target.y}
-                />
+                <g key={`${sourceId}-${targetId}`}>
+                  <line x1={source.x} x2={target.x} y1={source.y} y2={target.y} />
+                  <text
+                    className="neural-index__weight"
+                    x={(source.x + target.x) / 2}
+                    y={(source.y + target.y) / 2 - 7}
+                  >
+                    {weight}
+                  </text>
+                </g>
               );
             })}
           </g>
           <g aria-hidden="true" className="neural-index__layer-labels">
-            <text x="100" y="30" textAnchor="middle">
+            <text x="100" y="28" textAnchor="middle">
               {labels.input}
             </text>
-            <text x="480" y="30" textAnchor="middle">
+            <text x="500" y="28" textAnchor="middle">
               {labels.hidden}
             </text>
-            <text x="870" y="30" textAnchor="middle">
+            <text x="900" y="28" textAnchor="middle">
               {labels.output}
+            </text>
+          </g>
+          <g aria-hidden="true" className="neural-index__layer-symbols">
+            <text x="100" y="485" textAnchor="middle">
+              i
+            </text>
+            <text x="500" y="485" textAnchor="middle">
+              j
+            </text>
+            <text x="900" y="485" textAnchor="middle">
+              k
+            </text>
+          </g>
+          <g aria-hidden="true" className="neural-index__weight-symbols">
+            <text x="225" y="485" textAnchor="middle">
+              wᵢⱼ
+            </text>
+            <text x="775" y="485" textAnchor="middle">
+              wⱼₖ
             </text>
           </g>
           {nodes.map((node) => (

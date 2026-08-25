@@ -11,12 +11,12 @@ export type TechnologyGraphNode = Readonly<{
   area: TechnologyAreaId;
   companies: ReadonlyArray<TechnologyCompany>;
   icon?: string;
+  iconScale?: number;
 }>;
 
 export type TechnologyGraphEdge = Readonly<{
   source: string;
   target: string;
-  crossArea?: boolean;
 }>;
 
 const technologyAreas: ReadonlyArray<
@@ -59,8 +59,13 @@ const technologyAreas: ReadonlyArray<
 
 const relations: ReadonlyArray<readonly [string, string]> = [
   ["OpenAI", "LangChain"],
+  ["OpenAI", "CrewAI"],
   ["Ollama", "LangChain"],
+  ["Ollama", "DeepSeek"],
+  ["Ollama", "Qwen"],
   ["Hugging Face", "Python"],
+  ["Hugging Face", "DeepSeek"],
+  ["Hugging Face", "Qwen"],
   ["TensorFlow", "Python"],
   ["PyTorch", "Python"],
   ["Scikit-learn", "Python"],
@@ -69,20 +74,25 @@ const relations: ReadonlyArray<readonly [string, string]> = [
   ["Milvus", "LangChain"],
   ["Pandas", "NumPy"],
   ["Pandas", "Python"],
+  ["Pandas", "Matplotlib"],
+  ["NumPy", "Matplotlib"],
   ["FastAPI", "Python"],
+  ["LangChain", "Python"],
   ["CrewAI", "LangChain"],
   ["n8n", "FastAPI"],
   ["Docker", "AWS"],
+  ["GitHub", "GitLab"],
+  ["GitHub", "Docker"],
+  ["GitLab", "Docker"],
   ["COBOL", "Tree-sitter"],
   ["JCL", "COBOL"],
   ["PL/I", "Tree-sitter"],
   ["Java", "Tree-sitter"],
   ["Visual Basic", "MS Excel"],
+  ["MS Excel", "MS Word"],
+  ["MS Excel", "MS PowerPoint"],
+  ["MS Word", "MS PowerPoint"],
 ];
-
-const areaByTechnology = new Map(
-  technologyAreas.flatMap((area) => area.items.map((technology) => [technology, area.id] as const)),
-);
 
 const technologyIcons: Readonly<Record<string, string>> = {
   OpenAI: "openai.png",
@@ -114,6 +124,30 @@ const technologyIcons: Readonly<Record<string, string>> = {
   "MS PowerPoint": "powerpoint.png",
 };
 
+const technologyIconScales: Readonly<Record<string, number>> = {
+  AWS: 0.84,
+  DeepSeek: 1.28,
+  Docker: 0.9,
+  GitHub: 0.82,
+  GitLab: 0.86,
+  "Hugging Face": 1.24,
+  LangChain: 1.22,
+  Matplotlib: 1.28,
+  Milvus: 1.08,
+  MongoDB: 1.16,
+  Neo4j: 1.24,
+  NumPy: 1.22,
+  OpenAI: 1.2,
+  Pandas: 1.22,
+  Python: 1.2,
+  Qwen: 1.24,
+  TensorFlow: 1.28,
+  FastAPI: 1.22,
+  "MS Excel": 0.86,
+  "MS PowerPoint": 0.84,
+  "MS Word": 0.86,
+};
+
 export const technologyGraphNodes: ReadonlyArray<TechnologyGraphNode> = technologyAreas.flatMap(
   (area) =>
     area.items.map((technology) => ({
@@ -123,6 +157,7 @@ export const technologyGraphNodes: ReadonlyArray<TechnologyGraphNode> = technolo
       icon: technologyIcons[technology]
         ? `/images/technologies/${technologyIcons[technology]}`
         : undefined,
+      iconScale: technologyIconScales[technology],
       companies: professionalProfile.experience
         .filter((experience) =>
           (experience.technologies as ReadonlyArray<string>).includes(technology),
@@ -137,7 +172,6 @@ export const technologyGraphEdges: ReadonlyArray<TechnologyGraphEdge> = relation
   ([source, target]) => ({
     source: nodeIdByLabel.get(source) ?? source,
     target: nodeIdByLabel.get(target) ?? target,
-    crossArea: areaByTechnology.get(source) !== areaByTechnology.get(target),
   }),
 );
 

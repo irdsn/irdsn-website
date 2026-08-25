@@ -141,12 +141,37 @@
       stroke-width var(--duration-fast);
   }
 
-  .neural-index__layer-labels {
+  .neural-index__weight {
     fill: var(--color-muted);
     font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
     font-size: 12px;
+    opacity: 0.84;
+    paint-order: stroke;
+    stroke: var(--color-background);
+    stroke-width: 3px;
+    text-anchor: middle;
+  }
+
+  .neural-index__layer-labels {
+    fill: var(--color-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 14px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+  }
+
+  .neural-index__layer-symbols {
+    fill: var(--color-accent);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .neural-index__weight-symbols {
+    fill: var(--color-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 13px;
+    font-style: italic;
   }
 
   .neural-index__node circle {
@@ -163,7 +188,7 @@
 
   .neural-index__node text {
     fill: var(--color-text);
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 700;
     pointer-events: none;
   }
@@ -480,9 +505,15 @@
   .technology-graph {
     display: grid;
     overflow: hidden;
-    border: 1px solid var(--color-border);
+    border: 1px solid color-mix(in srgb, var(--color-border) 72%, white);
     border-radius: var(--radius-lg);
-    background: var(--color-surface);
+    background:
+      linear-gradient(135deg, rgb(255 255 255 / 0.2), transparent 42%),
+      color-mix(in srgb, var(--color-surface) 78%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.48),
+      0 1.5rem 4rem rgb(9 30 22 / 0.12);
+    backdrop-filter: blur(1.25rem) saturate(135%);
     grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.34fr);
   }
 
@@ -496,11 +527,13 @@
     display: grid;
     border-inline-start: 1px solid var(--color-border);
     grid-template-rows: auto 1fr;
+    background: color-mix(in srgb, var(--color-surface) 66%, transparent);
   }
 
   .technology-filter-panel {
     padding: var(--space-6);
     border-block-end: 1px solid var(--color-border);
+    background: linear-gradient(145deg, rgb(255 255 255 / 0.2), transparent 58%);
   }
 
   .technology-graph__toolbar {
@@ -544,11 +577,17 @@
 
   .technology-graph__viewport {
     overflow-x: auto;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in srgb, var(--color-accent) 9%, transparent),
-      transparent 62%
-    );
+    background:
+      radial-gradient(
+        circle at 25% 18%,
+        color-mix(in srgb, var(--color-ai) 15%, transparent),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 76% 74%,
+        color-mix(in srgb, var(--color-data) 14%, transparent),
+        transparent 38%
+      );
   }
 
   .technology-graph svg {
@@ -560,10 +599,10 @@
   }
 
   .graph-field {
-    fill: color-mix(in srgb, var(--color-surface) 68%, transparent);
-    stroke: var(--color-border);
-    stroke-dasharray: 7 10;
+    fill: url("#technology-glass-field");
+    stroke: color-mix(in srgb, var(--color-border) 68%, white);
     stroke-width: 2;
+    filter: drop-shadow(0 22px 38px rgb(0 0 0 / 0.12));
   }
 
   .graph-area--ai-ml,
@@ -593,14 +632,8 @@
 
   .graph-edges line {
     stroke: var(--color-border);
-    stroke-width: 2;
+    stroke-width: 1.5;
     transition: opacity var(--duration-fast);
-  }
-
-  .graph-edges line.is-cross-area {
-    stroke: var(--color-accent);
-    stroke-dasharray: 7 6;
-    stroke-opacity: 0.65;
   }
 
   .graph-node {
@@ -612,11 +645,25 @@
     cursor: grabbing;
   }
 
-  .graph-node circle {
-    fill: #fff;
-    stroke: var(--area-color);
-    stroke-width: 4;
-    filter: drop-shadow(0 5px 8px rgb(0 0 0 / 0.2));
+  .graph-node__glass {
+    fill: url("#technology-glass-node");
+    stroke: color-mix(in srgb, var(--color-border) 82%, white);
+    stroke-width: 2;
+    filter: drop-shadow(0 8px 11px rgb(0 0 0 / 0.2));
+  }
+
+  .graph-node__highlight {
+    fill: rgb(255 255 255 / 0.14);
+    pointer-events: none;
+    stroke: rgb(255 255 255 / 0.3);
+    stroke-width: 1;
+  }
+
+  .graph-node__logo-plate {
+    fill: rgb(255 255 255 / 0.5);
+    pointer-events: none;
+    stroke: rgb(255 255 255 / 0.32);
+    stroke-width: 1;
   }
 
   .graph-node__fallback {
@@ -636,10 +683,10 @@
     stroke-width: 4px;
   }
 
-  .graph-node.is-selected circle,
-  .graph-node:focus-visible circle {
+  .graph-node.is-selected .graph-node__glass,
+  .graph-node:focus-visible .graph-node__glass {
     stroke: var(--color-text);
-    stroke-width: 5;
+    stroke-width: 3;
   }
 
   .graph-node:focus-visible {
@@ -713,7 +760,11 @@
   .role {
     margin-block-start: var(--space-8);
     padding-block-start: var(--space-8);
-    border-block-start: 1px solid var(--color-border);
+  }
+
+  .timeline-content h3 + .role {
+    margin-block-start: var(--space-4);
+    padding-block-start: 0;
   }
 
   .role h4 {

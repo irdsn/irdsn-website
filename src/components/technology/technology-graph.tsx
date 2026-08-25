@@ -103,6 +103,21 @@ export function TechnologyGraph({ locale }: { locale: Locale }) {
             role="group"
             viewBox={`0 0 ${width} ${height}`}
           >
+            <defs aria-hidden="true">
+              <radialGradient id="technology-glass-field" cx="34%" cy="26%" r="72%">
+                <stop offset="0%" stopColor="var(--color-surface)" stopOpacity="0.84" />
+                <stop offset="48%" stopColor="var(--color-accent)" stopOpacity="0.08" />
+                <stop offset="100%" stopColor="var(--color-surface)" stopOpacity="0.28" />
+              </radialGradient>
+              <radialGradient id="technology-glass-node" cx="30%" cy="22%" r="78%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.6" />
+                <stop offset="42%" stopColor="#ffffff" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0.08" />
+              </radialGradient>
+              <clipPath id="technology-logo-clip">
+                <circle r="30" />
+              </clipPath>
+            </defs>
             <circle
               aria-hidden="true"
               className="graph-field"
@@ -122,7 +137,7 @@ export function TechnologyGraph({ locale }: { locale: Locale }) {
                   activeArea && sourceNode.area !== activeArea && targetNode.area !== activeArea;
                 return (
                   <line
-                    className={`${edge.crossArea ? "is-cross-area" : ""}${muted ? " is-muted" : ""}`}
+                    className={muted ? "is-muted" : undefined}
                     key={`${edge.source}-${edge.target}`}
                     x1={source.x}
                     x2={target.x}
@@ -137,6 +152,7 @@ export function TechnologyGraph({ locale }: { locale: Locale }) {
               const point = positions[node.id];
               if (!point) return null;
               const muted = activeArea !== null && node.area !== activeArea;
+              const iconSize = 56 * (node.iconScale ?? 1);
               return (
                 <g
                   aria-label={`${node.label}. ${node.companies.map((company) => company.name).join(", ") || copy.noCompany}`}
@@ -156,15 +172,24 @@ export function TechnologyGraph({ locale }: { locale: Locale }) {
                   style={{ transform: `translate(${point.x}px, ${point.y}px)` }}
                   tabIndex={0}
                 >
-                  <circle r="39" />
+                  <circle className="graph-node__glass" r="39" />
+                  <circle
+                    aria-hidden="true"
+                    className="graph-node__highlight"
+                    cx="-12"
+                    cy="-14"
+                    r="15"
+                  />
+                  <circle aria-hidden="true" className="graph-node__logo-plate" r="30" />
                   {node.icon ? (
                     <image
-                      height="50"
+                      clipPath="url(#technology-logo-clip)"
+                      height={iconSize}
                       href={node.icon}
                       preserveAspectRatio="xMidYMid meet"
-                      width="50"
-                      x="-25"
-                      y="-25"
+                      width={iconSize}
+                      x={-iconSize / 2}
+                      y={-iconSize / 2}
                     />
                   ) : (
                     <text className="graph-node__fallback" textAnchor="middle" y="5">

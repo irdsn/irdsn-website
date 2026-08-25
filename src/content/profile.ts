@@ -23,7 +23,7 @@ export const professionalProfile = {
   experience: [
     {
       id: "base-100",
-      organization: "Base 100, S.A.",
+      organization: "BASE 100, S.A.",
       website: "https://base100.com/",
       logo: "/images/companies/base-100.png",
       location: { es: "Madrid, España", en: "Madrid, Spain" },
@@ -89,7 +89,7 @@ export const professionalProfile = {
     },
     {
       id: "collybrix",
-      organization: "Collybrix",
+      organization: "COLLYBRIX ACELERADORA, S.L.",
       website: "https://www.collybrix.com/es",
       logo: "/images/companies/collybrix.svg",
       location: { es: "Madrid, España · En remoto", en: "Madrid, Spain · Remote" },
@@ -135,7 +135,7 @@ export const professionalProfile = {
     },
     {
       id: "kyra-akaio",
-      organization: "Kyra Group – AKAIO",
+      organization: "KYRA GROUP – AKAIO",
       website: "https://www.akaio.ai/",
       logo: "/images/companies/akaio.png",
       location: { es: "Madrid, España", en: "Madrid, Spain" },
@@ -250,7 +250,7 @@ export const professionalProfile = {
     },
     {
       id: "fi-group",
-      organization: "FI Group (F. Iniciativas)",
+      organization: "FI GROUP (F. INICIATIVAS)",
       website: "https://www.fi-group.es/es",
       logo: "/images/companies/fi-group.jpeg",
       location: { es: "Madrid, España", en: "Madrid, Spain" },
@@ -299,7 +299,7 @@ export const professionalProfile = {
     },
     {
       id: "british-telecom",
-      organization: "British Telecom España",
+      organization: "BRITISH TELECOM ESPAÑA",
       website: "https://www.globalservices.bt.com/es",
       logo: "/images/companies/british-telecom.png",
       location: { es: "Madrid, España", en: "Madrid, Spain" },

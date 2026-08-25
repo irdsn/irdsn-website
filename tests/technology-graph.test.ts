@@ -16,6 +16,15 @@ describe("technology graph", () => {
     }
   });
 
+  it("connects every technology to at least one other node", () => {
+    const connectedIdentifiers = new Set(
+      technologyGraphEdges.flatMap((edge) => [edge.source, edge.target]),
+    );
+    for (const node of technologyGraphNodes) {
+      expect(connectedIdentifiers.has(node.id), node.label).toBe(true);
+    }
+  });
+
   it("traces every displayed technology to at least one CV experience", () => {
     for (const node of technologyGraphNodes) {
       expect(node.companies.length, node.label).toBeGreaterThan(0);
